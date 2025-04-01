@@ -186,79 +186,6 @@ const LoginForm: React.FC = () => {
     }
   };
 
-  // Função para tentar login com retentativas manuais
-  const handlePersistentLogin = async () => {
-    if (!validateForm()) return;
-    
-    setIsLoading(true);
-    
-    // Máximo 3 tentativas
-    let attempts = 0;
-    let loggedIn = false;
-    
-    // Primeiro verificar se o servidor está acessível
-    const connectionResult = await tryConnectWithRetry(2);
-    if (!connectionResult.success) {
-      // Se falhou no check normal, tenta diagnóstico
-      const diagnostic = await diagnosticAuth();
-      
-      // Se não encontrou nenhuma rota viável, aborta
-      const hasWorkingRoute = Object.values(diagnostic.routes).some(r => r.success);
-      if (!hasWorkingRoute) {
-        toast.error(`Servidor indisponível: ${connectionResult.message}`, { id: 'login-attempt' });
-        setConnectionDetails(connectionResult.details || '');
-        setDiagnosticResults(diagnostic.summary);
-        setIsLoading(false);
-        return;
-      } else {
-        toast.success('Encontrada rota alternativa, tentando login...', { id: 'login-attempt' });
-      }
-    }
-    
-    while (attempts < 3 && !loggedIn) {
-      attempts++;
-      toast.loading(`Tentativa ${attempts}/3. Aguarde...`, { id: 'login-attempt' });
-      
-      try {
-        const response = await authService.login({ email, password });
-        
-        if (response && response.access_token) {
-          localStorage.setItem('token', response.access_token);
-          loggedIn = true;
-          toast.success('Login realizado com sucesso!', { id: 'login-attempt' });
-          navigate('/dashboard');
-        } else {
-          toast.error(`Tentativa ${attempts}: Resposta inválida`, { id: 'login-attempt' });
-          // Aguarda 2 segundos entre tentativas
-          await new Promise(resolve => setTimeout(resolve, 2000));
-        }
-      } catch (error: any) {
-        const isConnectionError = 
-          error.message === 'Network Error' || 
-          error.code === 'ECONNABORTED' || 
-          (error.response && [502, 504].includes(error.response.status));
-        
-        if (isConnectionError) {
-          toast.error(`Tentativa ${attempts}: Erro de conexão. Tentando novamente...`, { id: 'login-attempt' });
-          // Espera mais tempo entre tentativas (backoff exponencial)
-          await new Promise(resolve => setTimeout(resolve, 2000 * attempts));
-        } else {
-          // Se não for erro de conexão, não tenta novamente
-          const message = error.response?.data?.detail || 'Não foi possível realizar o login. Verifique suas credenciais.';
-          toast.error(message, { id: 'login-attempt' });
-          loggedIn = false; // Sai do loop
-          break;
-        }
-      }
-    }
-    
-    if (!loggedIn && attempts === 3) {
-      toast.error('Não foi possível fazer login após várias tentativas. Tente mais tarde.', { id: 'login-attempt' });
-    }
-    
-    setIsLoading(false);
-  };
-
   return (
     <div className="auth-container">
       <div className="auth-card">
@@ -324,18 +251,6 @@ const LoginForm: React.FC = () => {
             {isLoading ? 'Entrando...' : 'Entrar'}
           </button>
           
-          {/* Botão adicional para login persistente - apenas em desenvolvimento */}
-          {process.env.NODE_ENV === 'development' && (
-            <button
-              type="button"
-              className="auth-button persistent-login"
-              onClick={handlePersistentLogin}
-              disabled={isLoading}
-            >
-              Tentar login persistente
-            </button>
-          )}
-          
           <div className="auth-links">
             <Link to="/forgot-password" className="auth-link">
               Esqueceu a senha?
@@ -344,16 +259,6 @@ const LoginForm: React.FC = () => {
               Ainda não tem conta? Cadastre-se
             </Link>
           </div>
-          
-          {/* Botão para testar conexão */}
-          <button
-            type="button"
-            onClick={handleTestConnection}
-            className="connection-test-button"
-            disabled={isCheckingConnection}
-          >
-            {isCheckingConnection ? 'Testando conexão...' : 'Testar conexão com o servidor'}
-          </button>
         </form>
         
         <div className="social-login">
