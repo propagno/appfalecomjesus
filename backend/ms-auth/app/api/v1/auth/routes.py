@@ -675,3 +675,47 @@ async def reset_password(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Erro ao processar solicitação de recuperação de senha"
         )
+
+
+@router.get("/user")
+def get_current_user_compat(auth_service: AuthService = Depends(get_auth_service), user_id: str = Depends(get_current_user_id)):
+    """
+    Get the current authenticated user (compatibility endpoint).
+    """
+    logger.info(f"Recebida solicitação para obter dados do usuário {user_id}")
+
+    # Reutiliza a mesma lógica do endpoint /me
+    user = auth_service.get_user_by_id(user_id)
+    if not user:
+        logger.error(f"Usuário {user_id} não encontrado")
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="User not found",
+        )
+
+    # Log do tipo e valor do campo onboarding_completed
+    logger.info(
+        f"Tipo do campo onboarding_completed: {type(user.onboarding_completed)}")
+    logger.info(
+        f"Valor do campo onboarding_completed: {user.onboarding_completed}")
+
+    # Garantir que o onboarding_completed seja um boolean
+    onboarding_status = bool(
+        user.onboarding_completed) if user.onboarding_completed is not None else False
+
+    # Converter o modelo ORM para um dicionário
+    user_dict = {
+        "id": user.id,
+        "name": user.name,
+        "email": user.email,
+        "created_at": user.created_at.isoformat() if hasattr(user, 'created_at') and user.created_at else None,
+        "is_active": user.is_active,
+        "is_admin": user.is_admin,
+        "onboarding_completed": onboarding_status
+    }
+
+    # Log explícito do valor de onboarding_completed após a conversão
+    logger.info(
+        f"User {user_id} - onboarding_completed final: {user_dict['onboarding_completed']} (tipo: {type(user_dict['onboarding_completed'])})")
+
+    return {"user": user_dict}

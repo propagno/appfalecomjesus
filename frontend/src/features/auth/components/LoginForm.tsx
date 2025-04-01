@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
 import { EyeIcon, EyeSlashIcon, EnvelopeIcon, LockIcon, LogoIcon } from './AuthIcons';
@@ -17,6 +17,10 @@ const LoginForm: React.FC = () => {
   const [errors, setErrors] = useState<{ email?: string; password?: string }>({});
   const [connectionDetails, setConnectionDetails] = useState<string>('');
   const [diagnosticResults, setDiagnosticResults] = useState<string>('');
+  
+  // Estado para armazenar o destino após autenticação bem-sucedida
+  const [authSuccess, setAuthSuccess] = useState(false);
+  const [redirectDestination, setRedirectDestination] = useState<string | null>(null);
 
   // Verificar conexão ao carregar o componente
   useEffect(() => {
@@ -49,6 +53,17 @@ const LoginForm: React.FC = () => {
 
     verifyConnection();
   }, []);
+
+  // useEffect para redirecionamento após autenticação bem-sucedida
+  useEffect(() => {
+    if (authSuccess && redirectDestination) {
+      console.log(`Executando redirecionamento FORÇADO para ${redirectDestination}`);
+      const timeoutId = setTimeout(() => {
+        window.location.href = redirectDestination;
+      }, 500);
+      return () => clearTimeout(timeoutId);
+    }
+  }, [authSuccess, redirectDestination]);
 
   const validateForm = () => {
     const newErrors: { email?: string; password?: string } = {};
@@ -127,14 +142,74 @@ const LoginForm: React.FC = () => {
     setIsLoading(true);
     
     try {
+      console.log('Iniciando login...');
       const response = await authService.login({ email, password });
+      console.log('Login realizado com sucesso. Resposta:', response);
       
       // Salva o token e informações do usuário
       if (response && response.access_token) {
         localStorage.setItem('token', response.access_token);
-        
         toast.success('Login realizado com sucesso!');
-        navigate('/dashboard');
+        
+        // Verifica se o usuário possui dados e se já completou o onboarding
+        if (response.user) {
+          console.log('Dados do usuário recebidos diretamente no login:', response.user);
+          
+          // Armazena os dados do usuário localmente
+          const userData = {
+            id: response.user.id,
+            name: response.user.name,
+            email: response.user.email,
+            onboarding_completed: response.user.onboarding_completed || false
+          };
+          
+          localStorage.setItem('user', JSON.stringify(userData));
+          console.log('Status de onboarding do usuário:', userData.onboarding_completed);
+          
+          // Definir destino de redirecionamento
+          if (userData.onboarding_completed === true) {
+            console.log('Preparando redirecionamento FORÇADO para /home - onboarding confirmado como true');
+            setRedirectDestination('/home');
+            setAuthSuccess(true);
+          } else {
+            console.log('Preparando redirecionamento FORÇADO para /onboarding - onboarding não é true');
+            setRedirectDestination('/onboarding');
+            setAuthSuccess(true);
+          }
+        } else {
+          console.log('Dados do usuário não recebidos no login. Buscando dados do usuário...');
+          
+          // Se não tiver informações do usuário, busca-as primeiro
+          try {
+            const userData = await authService.getCurrentUser();
+            console.log('Dados do usuário obtidos após login:', userData);
+            
+            localStorage.setItem('user', JSON.stringify({
+              id: userData.id,
+              name: userData.name,
+              email: userData.email,
+              onboarding_completed: userData.onboarding_completed || false
+            }));
+            
+            console.log('Status de onboarding do usuário:', userData.onboarding_completed);
+            
+            // Definir destino de redirecionamento
+            if (userData.onboarding_completed === true) {
+              console.log('Preparando redirecionamento FORÇADO para /home - onboarding confirmado como true');
+              setRedirectDestination('/home');
+              setAuthSuccess(true);
+            } else {
+              console.log('Preparando redirecionamento FORÇADO para /onboarding - onboarding não é true');
+              setRedirectDestination('/onboarding');
+              setAuthSuccess(true);
+            }
+          } catch (userError) {
+            console.error('Erro ao obter dados do usuário:', userError);
+            console.log('Redirecionando para /onboarding por padrão');
+            setRedirectDestination('/onboarding');
+            setAuthSuccess(true);
+          }
+        }
       } else {
         toast.error('Resposta inválida do servidor. Tente novamente.');
       }
@@ -184,79 +259,6 @@ const LoginForm: React.FC = () => {
     } finally {
       setIsLoading(false);
     }
-  };
-
-  // Função para tentar login com retentativas manuais
-  const handlePersistentLogin = async () => {
-    if (!validateForm()) return;
-    
-    setIsLoading(true);
-    
-    // Máximo 3 tentativas
-    let attempts = 0;
-    let loggedIn = false;
-    
-    // Primeiro verificar se o servidor está acessível
-    const connectionResult = await tryConnectWithRetry(2);
-    if (!connectionResult.success) {
-      // Se falhou no check normal, tenta diagnóstico
-      const diagnostic = await diagnosticAuth();
-      
-      // Se não encontrou nenhuma rota viável, aborta
-      const hasWorkingRoute = Object.values(diagnostic.routes).some(r => r.success);
-      if (!hasWorkingRoute) {
-        toast.error(`Servidor indisponível: ${connectionResult.message}`, { id: 'login-attempt' });
-        setConnectionDetails(connectionResult.details || '');
-        setDiagnosticResults(diagnostic.summary);
-        setIsLoading(false);
-        return;
-      } else {
-        toast.success('Encontrada rota alternativa, tentando login...', { id: 'login-attempt' });
-      }
-    }
-    
-    while (attempts < 3 && !loggedIn) {
-      attempts++;
-      toast.loading(`Tentativa ${attempts}/3. Aguarde...`, { id: 'login-attempt' });
-      
-      try {
-        const response = await authService.login({ email, password });
-        
-        if (response && response.access_token) {
-          localStorage.setItem('token', response.access_token);
-          loggedIn = true;
-          toast.success('Login realizado com sucesso!', { id: 'login-attempt' });
-          navigate('/dashboard');
-        } else {
-          toast.error(`Tentativa ${attempts}: Resposta inválida`, { id: 'login-attempt' });
-          // Aguarda 2 segundos entre tentativas
-          await new Promise(resolve => setTimeout(resolve, 2000));
-        }
-      } catch (error: any) {
-        const isConnectionError = 
-          error.message === 'Network Error' || 
-          error.code === 'ECONNABORTED' || 
-          (error.response && [502, 504].includes(error.response.status));
-        
-        if (isConnectionError) {
-          toast.error(`Tentativa ${attempts}: Erro de conexão. Tentando novamente...`, { id: 'login-attempt' });
-          // Espera mais tempo entre tentativas (backoff exponencial)
-          await new Promise(resolve => setTimeout(resolve, 2000 * attempts));
-        } else {
-          // Se não for erro de conexão, não tenta novamente
-          const message = error.response?.data?.detail || 'Não foi possível realizar o login. Verifique suas credenciais.';
-          toast.error(message, { id: 'login-attempt' });
-          loggedIn = false; // Sai do loop
-          break;
-        }
-      }
-    }
-    
-    if (!loggedIn && attempts === 3) {
-      toast.error('Não foi possível fazer login após várias tentativas. Tente mais tarde.', { id: 'login-attempt' });
-    }
-    
-    setIsLoading(false);
   };
 
   return (
@@ -322,19 +324,7 @@ const LoginForm: React.FC = () => {
             disabled={isLoading || serverStatus === 'checking'}
           >
             {isLoading ? 'Entrando...' : 'Entrar'}
-          </button>
-          
-          {/* Botão adicional para login persistente - apenas em desenvolvimento */}
-          {process.env.NODE_ENV === 'development' && (
-            <button
-              type="button"
-              className="auth-button persistent-login"
-              onClick={handlePersistentLogin}
-              disabled={isLoading}
-            >
-              Tentar login persistente
-            </button>
-          )}
+          </button>        
           
           <div className="auth-links">
             <Link to="/forgot-password" className="auth-link">
@@ -345,15 +335,6 @@ const LoginForm: React.FC = () => {
             </Link>
           </div>
           
-          {/* Botão para testar conexão */}
-          <button
-            type="button"
-            onClick={handleTestConnection}
-            className="connection-test-button"
-            disabled={isCheckingConnection}
-          >
-            {isCheckingConnection ? 'Testando conexão...' : 'Testar conexão com o servidor'}
-          </button>
         </form>
         
         <div className="social-login">

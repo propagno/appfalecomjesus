@@ -9,12 +9,12 @@ import LoadingPage from '../shared/components/LoadingPage';
 import LoginPage from '../features/auth/pages/LoginPage';
 import RegisterPage from '../features/auth/pages/RegisterPage';
 import ForgotPasswordPage from '../features/auth/pages/ForgotPasswordPage';
-import AuthOnboardingPage from '../pages/Onboarding';
+import OnboardingPage from '../features/study/pages/OnboardingPage';
 import HomePage from '../pages/Home';
 import MainLayout from '../layouts/MainLayout';
 import BibleExplorerPage from '../features/bible/pages/BibleExplorerPage';
 import ChatPage from '../features/chat/pages/ChatPage';
-import { StudyPlansPage, OnboardingPage as StudyOnboardingPage } from '../features/study';
+import { StudyPlansPage } from '../features/study';
 import SettingsPage from '../pages/Settings';
 import NotFoundPage from '../pages/NotFound';
 import { GamificationPage } from '../features/gamification';
@@ -65,6 +65,13 @@ const App: React.FC = () => {
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/forgot-password" element={<ForgotPasswordPage />} />
           
+          {/* Rota de Onboarding - Protegida, mas separada do layout principal */}
+          <Route path="/onboarding" element={
+            <ProtectedRoute>
+              <OnboardingPage />
+            </ProtectedRoute>
+          } />
+          
           {/* Rotas Protegidas */}
           <Route path="/" element={
             <ProtectedRoute>
@@ -72,9 +79,7 @@ const App: React.FC = () => {
             </ProtectedRoute>
           }>
             <Route path="home" element={<HomePage />} />
-            <Route path="onboarding" element={<AuthOnboardingPage />} />
             <Route path="plans" element={<StudyPlansPage />} />
-            <Route path="study/onboarding" element={<StudyOnboardingPage />} />
             
             {/* Bíblia */}
             <Route path="bible" element={<BibleExplorerPage />} />

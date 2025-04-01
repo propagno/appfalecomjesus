@@ -4,7 +4,6 @@ import LoadingPage from '../../shared/components/LoadingPage';
 import ProtectedRoute from '../../features/auth/components/ProtectedRoute';
 import LoginPage from '../../features/auth/pages/LoginPage';
 import RegisterPage from '../../features/auth/pages/RegisterPage';
-import AuthOnboardingPage from '../../pages/Onboarding';
 import ForgotPasswordPage from '../../features/auth/pages/ForgotPasswordPage';
 import ResetPasswordPage from '../../features/auth/pages/ResetPasswordPage';
 import HomePage from '../../pages/Home';
@@ -31,6 +30,13 @@ const Routes: React.FC = () => {
         <Route path="/forgot-password" element={<ForgotPasswordPage />} />
         <Route path="/reset-password" element={<ResetPasswordPage />} />
         
+        {/* Rota de Onboarding - Protegida, mas separada do layout principal */}
+        <Route path="/onboarding" element={
+          <ProtectedRoute>
+            <StudyOnboardingPage />
+          </ProtectedRoute>
+        } />
+        
         {/* Rotas Protegidas */}
         <Route path="/" element={
           <ProtectedRoute>
@@ -38,7 +44,6 @@ const Routes: React.FC = () => {
           </ProtectedRoute>
         }>
           <Route path="home" element={<HomePage />} />
-          <Route path="onboarding" element={<AuthOnboardingPage />} />
           <Route path="plans" element={<StudyPlansPage />} />
           <Route path="study/onboarding" element={<StudyOnboardingPage />} />
           

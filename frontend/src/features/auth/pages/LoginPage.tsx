@@ -13,7 +13,7 @@ const LoginPage: React.FC = () => {
   useEffect(() => {
     // Verificar se o usuário já está autenticado
     if (isAuthStatusChecked && isAuthenticated) {
-      navigate('/dashboard');
+      navigate('/home');
     }
   }, [isAuthStatusChecked, isAuthenticated, navigate]);
   

@@ -1,5 +1,5 @@
-import React, { ReactNode } from 'react';
-import { Outlet, Link, useLocation } from 'react-router-dom';
+import React, { ReactNode, useEffect } from 'react';
+import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuthContext } from '../features/auth/contexts/AuthContext';
 
 interface MainLayoutProps {
@@ -12,12 +12,28 @@ interface MainLayoutProps {
  */
 const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
   const location = useLocation();
+  const navigate = useNavigate();
   const { user, logout } = useAuthContext();
+  
+  // Verificar se o usuário completou o onboarding
+  useEffect(() => {
+    // Verificar se o usuário existe e se não completou o onboarding
+    if (user && user.onboarding_completed === false) {
+      console.log('MainLayout: Usuário não completou o onboarding. Redirecionando para /onboarding');
+      // Redirecionar para a página de onboarding
+      navigate('/onboarding');
+    }
+  }, [user, navigate]);
   
   // Verificar qual item do menu está ativo
   const isActive = (path: string) => {
     return location.pathname.startsWith(path);
   };
+  
+  // Se o usuário não tiver completado o onboarding, não renderizar o layout
+  if (user && user.onboarding_completed === false) {
+    return null; // Não renderiza nada enquanto redireciona
+  }
   
   return (
     <div className="flex min-h-screen bg-gray-50">

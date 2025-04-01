@@ -154,11 +154,51 @@ const authService = {
   },
 
   /**
-   * Obter dados do usuário atual
+   * Obtém informações do usuário atual (autenticado)
    */
   getCurrentUser: async (): Promise<User> => {
-    const response = await api.get<{ user: User }>('/auth/user');
-    return response.data.user;
+    try {
+      const response = await api.get<{ user: User }>('/auth/user');
+      console.log('Resposta completa de /auth/user:', response.data);
+      
+      if (response.data && response.data.user) {
+        const userData = response.data.user;
+        console.log('Dados do usuário recebidos:', userData);
+        console.log('Tipo do onboarding_completed:', typeof userData.onboarding_completed);
+        console.log('Valor do onboarding_completed:', userData.onboarding_completed);
+        
+        // Garantir que onboarding_completed seja sempre um booleano estrito
+        // === true força a comparação de tipo e valor
+        const isCompleted = userData.onboarding_completed === true;
+        userData.onboarding_completed = isCompleted;
+        
+        console.log('Valor final do onboarding_completed:', userData.onboarding_completed);
+        console.log('Tipo final do onboarding_completed:', typeof userData.onboarding_completed);
+        
+        return userData;
+      } else if ('id' in response.data) {
+        // Caso a API retorne o usuário diretamente, sem o campo "user"
+        const userData = response.data as unknown as User;
+        
+        // Também garantir a consistência do tipo aqui
+        console.log('Dados diretos do usuário recebidos:', userData);
+        console.log('Tipo do onboarding_completed:', typeof userData.onboarding_completed);
+        console.log('Valor do onboarding_completed:', userData.onboarding_completed);
+        
+        // Garantir que onboarding_completed seja sempre um booleano estrito
+        userData.onboarding_completed = userData.onboarding_completed === true;
+        
+        console.log('Valor final do onboarding_completed:', userData.onboarding_completed);
+        console.log('Tipo final do onboarding_completed:', typeof userData.onboarding_completed);
+        
+        return userData;
+      }
+      
+      throw new Error('Formato de resposta inválido');
+    } catch (error) {
+      console.error('Erro ao obter dados do usuário:', error);
+      throw error;
+    }
   },
 
   /**
