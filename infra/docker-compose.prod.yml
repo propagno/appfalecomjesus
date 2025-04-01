@@ -1,0 +1,196 @@
+version: '3.8'
+
+services:
+  # Frontend
+  frontend:
+    ports:
+      - "80:80"
+      - "443:443"
+    environment:
+      - NODE_ENV=production
+      - REACT_APP_API_URL=${API_URL}
+    restart: always
+
+  # Backend Services
+  ms-auth:
+    ports:
+      - "8001:5000"
+    environment:
+      - APP_NAME=ms-auth
+      - APP_ENV=production
+      - DATABASE_URL=postgresql://auth_user:${AUTH_DB_PASSWORD}@auth-db:5432/auth_db
+      - REDIS_URL=redis://redis:6379/0
+      - JWT_SECRET_KEY=${JWT_SECRET_KEY}
+    restart: always
+
+  ms-study:
+    ports:
+      - "8002:5000"
+    env_file:
+      - ../backend/ms-study/.env.prod
+    restart: always
+
+  ms-chatia:
+    ports:
+      - "8003:5000"
+    environment:
+      - APP_NAME=ms-chatia
+      - APP_ENV=production
+      - DATABASE_URL=postgresql://chat_user:${CHAT_DB_PASSWORD}@chat-db:5432/chat_db
+      - REDIS_URL=redis://redis:6379/2
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+    restart: always
+
+  ms-bible:
+    ports:
+      - "8004:5000"
+    environment:
+      - APP_NAME=ms-bible
+      - APP_ENV=production
+      - DATABASE_URL=postgresql://bible_user:${BIBLE_DB_PASSWORD}@bible-db:5432/bible_db
+      - REDIS_URL=redis://redis:6379/3
+    restart: always
+
+  ms-gamification:
+    ports:
+      - "8005:5000"
+    environment:
+      - APP_NAME=ms-gamification
+      - APP_ENV=production
+      - DATABASE_URL=postgresql://gamification_user:${GAMIFICATION_DB_PASSWORD}@gamification-db:5432/gamification_db
+      - REDIS_URL=redis://redis:6379/4
+    restart: always
+
+  ms-admin:
+    ports:
+      - "8006:5000"
+    environment:
+      - APP_NAME=ms-admin
+      - APP_ENV=production
+      - DATABASE_URL=postgresql://admin_user:${ADMIN_DB_PASSWORD}@admin-db:5432/admin_db
+      - REDIS_URL=redis://redis:6379/5
+      - ADMIN_TOKEN=${ADMIN_TOKEN}
+    restart: always
+
+  # Nginx
+  nginx:
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/conf.d:/etc/nginx/conf.d
+      - ./nginx/ssl:/etc/nginx/ssl
+      - ../frontend/build:/usr/share/nginx/html
+    restart: always
+
+  # Databases
+  auth-db:
+    environment:
+      - POSTGRES_USER=auth_user
+      - POSTGRES_PASSWORD=${AUTH_DB_PASSWORD}
+      - POSTGRES_DB=auth_db
+    volumes:
+      - auth-data:/var/lib/postgresql/data
+    restart: always
+
+  study-db:
+    environment:
+      - POSTGRES_USER=study_user
+      - POSTGRES_PASSWORD=${STUDY_DB_PASSWORD}
+      - POSTGRES_DB=study_db
+    volumes:
+      - study-data:/var/lib/postgresql/data
+    restart: always
+
+  chat-db:
+    environment:
+      - POSTGRES_USER=chat_user
+      - POSTGRES_PASSWORD=${CHAT_DB_PASSWORD}
+      - POSTGRES_DB=chat_db
+    volumes:
+      - chat-data:/var/lib/postgresql/data
+    restart: always
+
+  bible-db:
+    environment:
+      - POSTGRES_USER=bible_user
+      - POSTGRES_PASSWORD=${BIBLE_DB_PASSWORD}
+      - POSTGRES_DB=bible_db
+    volumes:
+      - bible-data:/var/lib/postgresql/data
+    restart: always
+
+  gamification-db:
+    environment:
+      - POSTGRES_USER=gamification_user
+      - POSTGRES_PASSWORD=${GAMIFICATION_DB_PASSWORD}
+      - POSTGRES_DB=gamification_db
+    volumes:
+      - gamification-data:/var/lib/postgresql/data
+    restart: always
+
+  admin-db:
+    environment:
+      - POSTGRES_USER=admin_user
+      - POSTGRES_PASSWORD=${ADMIN_DB_PASSWORD}
+      - POSTGRES_DB=admin_db
+    volumes:
+      - admin-data:/var/lib/postgresql/data
+    restart: always
+
+  # Redis
+  redis:
+    command: redis-server --appendonly yes
+    volumes:
+      - redis-data:/data
+    restart: always
+
+  # RabbitMQ
+  rabbitmq:
+    ports:
+      - "5672:5672"
+    environment:
+      - RABBITMQ_DEFAULT_USER=${RABBITMQ_USER}
+      - RABBITMQ_DEFAULT_PASS=${RABBITMQ_PASS}
+    volumes:
+      - rabbitmq-data:/var/lib/rabbitmq
+    restart: always
+
+  # Elastic Stack
+  elasticsearch:
+    environment:
+      - discovery.type=single-node
+      - ES_JAVA_OPTS=-Xms1g -Xmx1g
+      - xpack.security.enabled=true
+      - ELASTIC_PASSWORD=${ELASTIC_PASSWORD}
+    volumes:
+      - elasticsearch-data:/usr/share/elasticsearch/data
+    restart: always
+
+  logstash:
+    volumes:
+      - ./logging/logstash/pipeline:/usr/share/logstash/pipeline
+      - ./logging/logstash/config/logstash.yml:/usr/share/logstash/config/logstash.yml
+    restart: always
+
+  kibana:
+    environment:
+      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+      - ELASTICSEARCH_USERNAME=elastic
+      - ELASTICSEARCH_PASSWORD=${ELASTIC_PASSWORD}
+    restart: always
+
+volumes:
+  auth-data:
+  study-data:
+  chat-data:
+  bible-data:
+  gamification-data:
+  admin-data:
+  redis-data:
+  rabbitmq-data:
+  elasticsearch-data:
+
+networks:
+  falecomjesus-network:
+    driver: bridge 

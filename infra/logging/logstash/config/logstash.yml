@@ -1,0 +1,57 @@
+# Configuração do Logstash para FaleComJesus
+
+http.host: "0.0.0.0"
+xpack.monitoring.elasticsearch.hosts: [ "http://elasticsearch:9200" ]
+xpack.monitoring.enabled: true
+
+# Configurações de pipeline
+pipeline.workers: 2
+pipeline.batch.size: 125
+pipeline.batch.delay: 50
+
+# Configurações de fila
+queue.type: persisted
+queue.max_bytes: 1gb
+
+# Configurações de memória
+jvm.options: "-Xms1g -Xmx1g"
+
+# Configurações de rede
+network.host: "0.0.0.0"
+http.port: 5044
+tcp.port: 5000
+udp.port: 5000
+
+# Configurações de log
+log.level: info
+log.format: json
+
+# Configurações de segurança
+xpack.security.enabled: true
+xpack.security.transport.ssl.enabled: true
+xpack.security.transport.ssl.verification_mode: certificate
+xpack.security.transport.ssl.keystore.path: /usr/share/logstash/config/logstash.keystore
+xpack.security.transport.ssl.truststore.path: /usr/share/logstash/config/logstash.truststore
+
+# Configurações de retenção
+path.logs: /var/log/logstash
+path.data: /var/lib/logstash
+path.config: /usr/share/logstash/pipeline
+
+# Configurações de monitoramento
+monitoring.enabled: true
+monitoring.elasticsearch.hosts: ["http://elasticsearch:9200"]
+monitoring.elasticsearch.username: "elastic"
+monitoring.elasticsearch.password: "${ELASTIC_PASSWORD}"
+
+# Configurações de alertas
+xpack.monitoring.alerting.enabled: true
+xpack.monitoring.alerting.email.enabled: true
+xpack.monitoring.alerting.email.smtp.host: "smtp.gmail.com"
+xpack.monitoring.alerting.email.smtp.port: 587
+xpack.monitoring.alerting.email.smtp.user: "${SMTP_USER}"
+xpack.monitoring.alerting.email.smtp.password: "${SMTP_PASSWORD}"
+xpack.monitoring.alerting.email.smtp.ssl: true
+xpack.monitoring.alerting.email.smtp.starttls: true
+xpack.monitoring.alerting.email.from: "${ALERT_EMAIL_FROM}"
+xpack.monitoring.alerting.email.to: "${ALERT_EMAIL_TO}" 

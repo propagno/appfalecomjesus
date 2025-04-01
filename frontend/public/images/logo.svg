@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 200 200" fill="none">
+  <circle cx="100" cy="100" r="100" fill="#003366"/>
+  <circle cx="100" cy="100" r="80" fill="#DAA520" opacity="0.9"/>
+  <path d="M100 50C100 50 70 70 70 100C70 130 100 150 100 150C100 150 130 130 130 100C130 70 100 50 100 50Z" fill="#003366"/>
+  <path d="M70 100H130" stroke="#003366" stroke-width="8" stroke-linecap="round"/>
+  <path d="M30 100C30 58.5786 63.5786 25 105 25C146.421 25 180 58.5786 180 100" stroke="#DAA520" stroke-width="4" stroke-dasharray="8 8"/>
+  <text x="25" y="190" font-family="Montserrat, sans-serif" font-size="20" font-weight="700" fill="#DAA520">FALE COM JESUS</text>
+</svg> 

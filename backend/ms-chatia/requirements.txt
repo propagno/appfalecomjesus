@@ -1,0 +1,15 @@
+fastapi>=0.95.0,<0.96.0
+uvicorn>=0.22.0,<0.23.0
+pydantic>=1.10.7,<2.0.0
+python-multipart>=0.0.6,<0.1.0
+openai>=1.6.0
+httpx>=0.24.0
+python-jose>=3.3.0
+PyJWT>=2.8.0
+passlib>=1.7.4
+python-dotenv>=1.0.0
+elasticsearch>=8.9.0
+redis>=4.5.4
+SQLAlchemy>=2.0.9,<2.1.0
+psycopg2-binary>=2.9.6,<3.0.0
+alembic>=1.10.3,<2.0.0

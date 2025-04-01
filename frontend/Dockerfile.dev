@@ -1,0 +1,26 @@
+# Imagem base para desenvolvimento
+FROM node:18-alpine
+
+# Diretório de trabalho
+WORKDIR /app
+
+# Instalar dependências apenas se package.json mudar
+COPY package.json ./
+COPY package-lock.json ./
+
+# Instalar dependências
+RUN npm install --legacy-peer-deps
+
+# Não precisamos copiar o código aqui, vamos usar volume montado
+# COPY . .
+
+
+# Expor a porta que o servidor de desenvolvimento usa
+EXPOSE 3000
+
+
+# Aumentar bastante o limite de memória do Node para resolver "JavaScript heap out of memory"
+ENV NODE_OPTIONS="--max-old-space-size=4096"
+
+# Comando padrão para iniciar o servidor de desenvolvimento
+CMD ["npm", "start"] 

@@ -1,0 +1,340 @@
+services:
+  # Frontend service
+  frontend:
+    build:
+      context: ../frontend
+      dockerfile: Dockerfile.dev
+    container_name: infra-frontend
+    volumes:
+      - ../frontend:/app
+      - /app/node_modules
+    ports:
+      - "3000:3000"
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+      - WDS_SOCKET_PORT=0
+      - REACT_APP_API_URL=http://localhost
+      - NODE_OPTIONS=--max-old-space-size=4096
+    command: npm start
+    networks:
+      - app-network
+    depends_on:
+      - ms-auth
+    mem_limit: 2g
+
+  # Nginx service (servindo o frontend)
+  nginx:
+    image: nginx:alpine
+    container_name: infra-nginx
+    ports:
+      - "80:80"
+    volumes:
+      - ../nginx/conf.d:/etc/nginx/conf.d
+      - ../frontend/build:/usr/share/nginx/html
+    networks:
+      - app-network
+    depends_on:
+      - ms-auth
+      - ms-study
+      - ms-chatia
+      - ms-bible
+      - ms-gamification
+      - ms-admin
+      - ms-monetization
+    mem_limit: 128m
+
+  # Redis service
+  redis:
+    image: redis:latest
+    container_name: infra-redis
+    ports:
+      - "6379:6379"
+    networks:
+      - app-network
+    mem_limit: 256m
+
+  # Auth database
+  auth-db:
+    image: postgres:15
+    container_name: infra-auth-db
+    ports:
+      - "5431:5432"
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=auth
+    networks:
+      - app-network
+    volumes:
+      - ./volumes/auth:/var/lib/postgresql/data
+    mem_limit: 256m
+
+  # Auth service
+  ms-auth:
+    build:
+      context: ../backend/ms-auth
+      dockerfile: Dockerfile
+    container_name: infra-ms-auth
+    ports:
+      - "8001:5000"
+    volumes:
+      - ../backend/ms-auth:/app
+    depends_on:
+      - auth-db
+      - redis
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@auth-db:5432/auth
+      - REDIS_URL=redis://redis:6379/0
+      - JWT_SECRET_KEY=falecomjesussecretkey2024
+      - ENVIRONMENT=development
+      - DEBUG=true
+      - PORT=5000
+      - HOST=0.0.0.0
+      - CORS_ORIGINS=http://localhost:3000,http://localhost:8001,http://localhost,http://127.0.0.1:3000,http://127.0.0.1
+    networks:
+      - app-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    mem_limit: 256m
+
+  # Study database
+  study-db:
+    image: postgres:15
+    container_name: infra-study-db
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=study_db
+    networks:
+      - app-network
+    volumes:
+      - ./volumes/study:/var/lib/postgresql/data
+    mem_limit: 256m
+
+  # Study service
+  ms-study:
+    build:
+      context: ../backend/ms-study
+      dockerfile: Dockerfile
+    container_name: infra-ms-study
+    ports:
+      - "8002:5000"
+    depends_on:
+      - study-db
+      - redis
+      - ms-chatia
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@study-db:5432/study_db
+      - REDIS_URL=redis://redis:6379/1
+      - JWT_SECRET=falecomjesussecretkey2024
+      - CHATIA_URL=http://ms-chatia:5000/api/chat
+    networks:
+      - app-network
+    mem_limit: 256m
+
+  # ChatIA database
+  chatia-db:
+    image: postgres:15
+    container_name: infra-chatia-db
+    ports:
+      - "5433:5432"
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=chatia_db
+    networks:
+      - app-network
+    volumes:
+      - ./volumes/chatia:/var/lib/postgresql/data
+    mem_limit: 256m
+
+  # ChatIA service
+  ms-chatia:
+    build:
+      context: ../backend/ms-chatia
+      dockerfile: Dockerfile
+    container_name: infra-ms-chatia
+    ports:
+      - "8003:5000"
+    depends_on:
+      - chatia-db
+      - redis
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@chatia-db:5432/chatia_db
+      - REDIS_URL=redis://redis:6379/2
+      - JWT_SECRET=falecomjesussecretkey2024
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - PORT=5000
+      - HOST=0.0.0.0
+    networks:
+      - app-network
+    mem_limit: 512m
+
+  # Bible database
+  bible-db:
+    image: postgres:15
+    container_name: infra-bible-db
+    ports:
+      - "5434:5432"
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=bible_db
+    networks:
+      - app-network
+    volumes:
+      - ./volumes/bible:/var/lib/postgresql/data
+    mem_limit: 256m
+
+  # Bible service
+  ms-bible:
+    build:
+      context: ../backend/ms-bible
+      dockerfile: Dockerfile
+    container_name: infra-ms-bible
+    ports:
+      - "8004:5000"
+    depends_on:
+      - bible-db
+      - redis
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@bible-db:5432/bible_db
+      - REDIS_URL=redis://redis:6379/3
+      - JWT_SECRET=falecomjesussecretkey2024
+    networks:
+      - app-network
+    mem_limit: 256m
+
+  # Gamification database
+  gamification-db:
+    image: postgres:15
+    container_name: infra-gamification-db
+    ports:
+      - "5435:5432"
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=gamification_db
+    networks:
+      - app-network
+    volumes:
+      - ./volumes/gamification:/var/lib/postgresql/data
+    mem_limit: 256m
+
+  # Gamification service
+  ms-gamification:
+    build:
+      context: ../backend/ms-gamification
+      dockerfile: Dockerfile
+    container_name: infra-ms-gamification
+    ports:
+      - "8005:5000"
+    depends_on:
+      - gamification-db
+      - redis
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@gamification-db:5432/gamification_db
+      - REDIS_URL=redis://redis:6379/4
+      - JWT_SECRET=falecomjesussecretkey2024
+    networks:
+      - app-network
+    mem_limit: 256m
+
+  # Admin database
+  admin-db:
+    image: postgres:15
+    container_name: infra-admin-db
+    ports:
+      - "5436:5432"
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=admin_db
+    networks:
+      - app-network
+    volumes:
+      - ./volumes/admin:/var/lib/postgresql/data
+    mem_limit: 256m
+
+  # Admin service
+  ms-admin:
+    build:
+      context: ../backend/ms-admin
+      dockerfile: Dockerfile
+    container_name: infra-ms-admin
+    ports:
+      - "8006:5000"
+    depends_on:
+      - admin-db
+      - redis
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@admin-db:5432/admin_db
+      - REDIS_URL=redis://redis:6379/5
+      - JWT_SECRET=falecomjesussecretkey2024
+    networks:
+      - app-network
+    mem_limit: 256m
+
+  # Monetization database
+  monetization-db:
+    image: postgres:15
+    container_name: infra-monetization-db
+    ports:
+      - "5437:5432"
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=monetization_db
+    networks:
+      - app-network
+    volumes:
+      - ./volumes/monetization:/var/lib/postgresql/data
+    mem_limit: 256m
+
+  # Monetization service
+  ms-monetization:
+    build:
+      context: ../backend/ms-monetization
+      dockerfile: Dockerfile
+    container_name: infra-ms-monetization
+    ports:
+      - "8007:5000"
+    depends_on:
+      - monetization-db
+      - redis
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@monetization-db:5432/monetization_db
+      - REDIS_URL=redis://redis:6379/3
+      - JWT_SECRET=falecomjesussecretkey2024
+      - PORT=5000
+      - HOST=0.0.0.0
+      - CORS_ORIGINS=http://localhost:3000,http://localhost
+    networks:
+      - app-network
+    mem_limit: 256m
+
+  # RabbitMQ
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: infra-rabbitmq
+    ports:
+      - "5672:5672"  # AMQP port
+      - "15672:15672"  # Management UI
+    environment:
+      - RABBITMQ_DEFAULT_USER=guest
+      - RABBITMQ_DEFAULT_PASS=guest
+    networks:
+      - app-network
+    mem_limit: 512m
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  frontend_build: 

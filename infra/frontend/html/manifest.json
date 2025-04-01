@@ -1,0 +1,44 @@
+{
+  "short_name": "Fale Com Jesus",
+  "name": "Fale Com Jesus - Estudo Bíblico com IA",
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "64x64 32x32 24x24 16x16",
+      "type": "image/x-icon"
+    },
+    {
+      "src": "/favicon.svg",
+      "sizes": "64x64",
+      "type": "image/svg+xml"
+    },
+    {
+      "src": "/logo192.svg",
+      "type": "image/svg+xml",
+      "sizes": "192x192",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/logo192.png",
+      "type": "image/png",
+      "sizes": "192x192",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/logo512.png",
+      "type": "image/png",
+      "sizes": "512x512",
+      "purpose": "any"
+    }
+  ],
+  "start_url": "/",
+  "display": "standalone",
+  "theme_color": "#003366",
+  "background_color": "#f8f9fa",
+  "orientation": "portrait",
+  "categories": ["lifestyle", "education", "books"],
+  "description": "Plataforma de estudos bíblicos personalizados com IA",
+  "dir": "ltr",
+  "lang": "pt-BR",
+  "prefer_related_applications": false
+} 

@@ -1,0 +1,64 @@
+# Framework FastAPI
+fastapi==0.104.1
+uvicorn==0.23.2
+
+# ORM e Banco de Dados
+sqlalchemy==2.0.23
+alembic==1.12.1
+asyncpg>=0.28.0,<0.29.0
+psycopg2-binary==2.9.9
+
+# Autenticação e Segurança
+python-jose==3.3.0
+passlib==1.7.4
+bcrypt==4.0.1
+python-multipart==0.0.6
+
+# Utilidades
+pydantic==2.4.2
+pydantic-settings==2.0.3
+python-dotenv==1.0.0
+httpx==0.25.1
+email-validator==2.0.0
+
+# Cache e Redis
+redis==5.0.1
+hiredis>=2.2.3,<3.0.0
+aioredis==2.0.1
+
+# Geração de PDF
+jinja2==3.1.2
+
+# Templates e renderização
+jinja2>=3.1.2,<4.0.0
+
+# Certificado PDF (opcional)
+WeasyPrint==60.1
+cffi==1.16.0
+cairocffi==1.6.1
+Pillow==10.1.0
+
+# Logging e monitoramento
+structlog>=23.2.0,<24.0.0
+
+# Testing
+pytest==7.4.3
+pytest-asyncio==0.21.1
+pytest-cov==4.1.0
+
+# Desenvolvimento
+black>=23.9.1,<24.0.0
+isort>=5.12.0,<6.0.0
+flake8>=6.1.0,<7.0.0
+
+# Adicionais
+pydantic[email]==2.4.2
+requests==2.31.0
+aiofiles==23.2.1
+
+# OpenAI integration
+openai==1.2.4
+tiktoken==0.5.2
+
+# Client HTTP
+pytz==2023.3 

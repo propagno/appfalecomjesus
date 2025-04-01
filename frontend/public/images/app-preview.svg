@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="500" height="600" viewBox="0 0 500 600" fill="none">
+  <!-- Phone frame -->
+  <rect x="50" y="30" width="400" height="540" rx="30" fill="#FFFFFF" stroke="#E0E0E0" stroke-width="4"/>
+  <rect x="70" y="50" width="360" height="500" rx="20" fill="#F5F5F5"/>
+  
+  <!-- Header -->
+  <rect x="70" y="50" width="360" height="80" rx="20" fill="#003366"/>
+  <circle cx="110" cy="90" r="20" fill="#DAA520"/>
+  <text x="145" y="95" font-family="Montserrat, sans-serif" font-size="18" font-weight="600" fill="white">Fale Com Jesus</text>
+  
+  <!-- Study Plan Section -->
+  <rect x="90" y="150" width="320" height="120" rx="12" fill="white" stroke="#E0E0E0" stroke-width="2"/>
+  <text x="110" y="180" font-family="Montserrat, sans-serif" font-size="16" font-weight="600" fill="#003366">Plano de Estudo</text>
+  <text x="110" y="210" font-family="Lora, serif" font-size="14" fill="#555555">Paz e Confiança com o Evangelho de João</text>
+  <rect x="110" y="230" width="150" height="20" rx="10" fill="#DAA520"/>
+  <text x="125" y="245" font-family="Montserrat, sans-serif" font-size="12" font-weight="500" fill="#000000">Continuar Estudo</text>
+  
+  <!-- Chat Section -->
+  <rect x="90" y="290" width="320" height="120" rx="12" fill="white" stroke="#E0E0E0" stroke-width="2"/>
+  <text x="110" y="320" font-family="Montserrat, sans-serif" font-size="16" font-weight="600" fill="#003366">Chat IA</text>
+  <text x="110" y="350" font-family="Lora, serif" font-size="14" fill="#555555">Pergunte qualquer dúvida sobre a Bíblia</text>
+  <rect x="110" y="370" width="150" height="20" rx="10" fill="#DAA520"/>
+  <text x="140" y="385" font-family="Montserrat, sans-serif" font-size="12" font-weight="500" fill="#000000">Iniciar Chat</text>
+  
+  <!-- Bible Section -->
+  <rect x="90" y="430" width="320" height="100" rx="12" fill="white" stroke="#E0E0E0" stroke-width="2"/>
+  <text x="110" y="460" font-family="Montserrat, sans-serif" font-size="16" font-weight="600" fill="#003366">Bíblia</text>
+  <text x="110" y="490" font-family="Lora, serif" font-size="14" fill="#555555">Explorar versículos e estudos</text>
+  
+  <!-- Navigation Bar -->
+  <rect x="70" y="550" width="360" height="60" rx="20" fill="#003366"/>
+  <circle cx="130" cy="580" r="15" fill="#DAA520" opacity="0.8"/>
+  <circle cx="250" cy="580" r="15" fill="#DAA520" opacity="0.8"/>
+  <circle cx="370" cy="580" r="15" fill="#DAA520" opacity="0.8"/>
+</svg> 

@@ -1,0 +1,191 @@
+version: '3.8'
+
+services:
+  # Frontend
+  frontend:
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=test
+      - REACT_APP_API_URL=http://localhost:8000
+    command: npm test
+
+  # Backend Services
+  ms-auth:
+    ports:
+      - "8001:5000"
+    environment:
+      - APP_NAME=ms-auth
+      - APP_ENV=test
+      - DATABASE_URL=postgresql://auth_user:auth_password@auth-db:5432/auth_db_test
+      - REDIS_URL=redis://redis:6379/0
+      - JWT_SECRET_KEY=${JWT_SECRET_KEY}
+      - TESTING=1
+    command: pytest
+
+  ms-study:
+    ports:
+      - "8002:5000"
+    env_file:
+      - ./backend/ms-study/.env.test
+    command: pytest
+
+  ms-chatia:
+    ports:
+      - "8003:5000"
+    environment:
+      - APP_NAME=ms-chatia
+      - APP_ENV=test
+      - DATABASE_URL=postgresql://chat_user:chat_password@chat-db:5432/chat_db_test
+      - REDIS_URL=redis://redis:6379/2
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - TESTING=1
+    command: pytest
+
+  ms-bible:
+    ports:
+      - "8004:5000"
+    environment:
+      - APP_NAME=ms-bible
+      - APP_ENV=test
+      - DATABASE_URL=postgresql://bible_user:bible_password@bible-db:5432/bible_db_test
+      - REDIS_URL=redis://redis:6379/3
+      - TESTING=1
+    command: pytest
+
+  ms-gamification:
+    ports:
+      - "8005:5000"
+    environment:
+      - APP_NAME=ms-gamification
+      - APP_ENV=test
+      - DATABASE_URL=postgresql://gamification_user:gamification_password@gamification-db:5432/gamification_db_test
+      - REDIS_URL=redis://redis:6379/4
+      - TESTING=1
+    command: pytest
+
+  ms-admin:
+    ports:
+      - "8006:5000"
+    environment:
+      - APP_NAME=ms-admin
+      - APP_ENV=test
+      - DATABASE_URL=postgresql://admin_user:admin_password@admin-db:5432/admin_db_test
+      - REDIS_URL=redis://redis:6379/5
+      - TESTING=1
+    command: pytest
+
+  # Databases
+  auth-db:
+    ports:
+      - "5431:5432"
+    environment:
+      - POSTGRES_USER=auth_user
+      - POSTGRES_PASSWORD=auth_password
+      - POSTGRES_DB=auth_db_test
+    volumes:
+      - auth-test-data:/var/lib/postgresql/data
+
+  study-db:
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=study_user
+      - POSTGRES_PASSWORD=study_password
+      - POSTGRES_DB=study_db_test
+    volumes:
+      - study-test-data:/var/lib/postgresql/data
+
+  chat-db:
+    ports:
+      - "5433:5432"
+    environment:
+      - POSTGRES_USER=chat_user
+      - POSTGRES_PASSWORD=chat_password
+      - POSTGRES_DB=chat_db_test
+    volumes:
+      - chat-test-data:/var/lib/postgresql/data
+
+  bible-db:
+    ports:
+      - "5434:5432"
+    environment:
+      - POSTGRES_USER=bible_user
+      - POSTGRES_PASSWORD=bible_password
+      - POSTGRES_DB=bible_db_test
+    volumes:
+      - bible-test-data:/var/lib/postgresql/data
+
+  gamification-db:
+    ports:
+      - "5435:5432"
+    environment:
+      - POSTGRES_USER=gamification_user
+      - POSTGRES_PASSWORD=gamification_password
+      - POSTGRES_DB=gamification_db_test
+    volumes:
+      - gamification-test-data:/var/lib/postgresql/data
+
+  admin-db:
+    ports:
+      - "5436:5432"
+    environment:
+      - POSTGRES_USER=admin_user
+      - POSTGRES_PASSWORD=admin_password
+      - POSTGRES_DB=admin_db_test
+    volumes:
+      - admin-test-data:/var/lib/postgresql/data
+
+  # Redis
+  redis:
+    ports:
+      - "6379:6379"
+    command: redis-server --appendonly yes
+    volumes:
+      - redis-test-data:/data
+
+  # RabbitMQ
+  rabbitmq:
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      - RABBITMQ_DEFAULT_USER=${RABBITMQ_USER}
+      - RABBITMQ_DEFAULT_PASS=${RABBITMQ_PASS}
+    volumes:
+      - rabbitmq-test-data:/var/lib/rabbitmq
+
+  # Elastic Stack
+  elasticsearch:
+    ports:
+      - "9200:9200"
+    environment:
+      - discovery.type=single-node
+      - ES_JAVA_OPTS=-Xms512m -Xmx512m
+      - xpack.security.enabled=false
+    volumes:
+      - elasticsearch-test-data:/usr/share/elasticsearch/data
+
+  logstash:
+    ports:
+      - "5044:5044"
+      - "9600:9600"
+    volumes:
+      - ./logstash/pipeline:/usr/share/logstash/pipeline
+
+  kibana:
+    ports:
+      - "5601:5601"
+    environment:
+      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+
+volumes:
+  auth-test-data:
+  study-test-data:
+  chat-test-data:
+  bible-test-data:
+  gamification-test-data:
+  admin-test-data:
+  redis-test-data:
+  rabbitmq-test-data:
+  elasticsearch-test-data: 

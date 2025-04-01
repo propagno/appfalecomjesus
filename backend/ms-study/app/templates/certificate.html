@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Certificado de Conclusão - FaleComJesus</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Lora:wght@400;500;600&display=swap');
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            width: 29.7cm;
+            height: 21cm;
+            position: relative;
+            background-color: #f8f7f4;
+            font-family: 'Montserrat', sans-serif;
+            color: #1a3a5f;
+            overflow: hidden;
+        }
+        
+        .certificate-container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            padding: 2cm;
+            background-color: #f8f7f4;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100" fill-opacity="0.05"><path d="M50 0L100 50L50 100L0 50L50 0z" fill="%231a3a5f"/></svg>');
+            background-size: 2cm;
+            border: 0.5cm solid #e9e5dd;
+        }
+        
+        .certificate-header {
+            text-align: center;
+            margin-bottom: 1cm;
+        }
+        
+        .certificate-title {
+            font-size: 1.8cm;
+            font-family: 'Lora', serif;
+            font-weight: 600;
+            color: #1a3a5f;
+            margin-bottom: 0.5cm;
+        }
+        
+        .certificate-subtitle {
+            font-size: 0.8cm;
+            font-weight: 500;
+            color: #5d8aa8;
+        }
+        
+        .certificate-content {
+            text-align: center;
+            margin: 2cm 0;
+        }
+        
+        .user-name {
+            font-size: 1.5cm;
+            font-family: 'Lora', serif;
+            font-weight: 600;
+            color: #233753;
+            margin: 1cm 0;
+        }
+        
+        .completion-text {
+            font-size: 0.6cm;
+            font-weight: 500;
+            line-height: 1.5;
+            margin: 1cm 0;
+        }
+        
+        .plan-title {
+            font-size: 0.8cm;
+            font-weight: 600;
+            font-family: 'Lora', serif;
+            color: #d4af37;
+            margin: 0.5cm 0;
+            font-style: italic;
+        }
+        
+        .certificate-footer {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 2cm;
+            padding-top: 1cm;
+            border-top: 2px solid #d4af37;
+        }
+        
+        .certificate-date {
+            font-size: 0.5cm;
+            text-align: center;
+        }
+        
+        .certificate-signature {
+            text-align: center;
+            font-family: 'Lora', serif;
+        }
+        
+        .signature-line {
+            width: 6cm;
+            border-top: 2px solid #1a3a5f;
+            margin: 0.5cm auto;
+        }
+        
+        .certificate-code-container {
+            position: absolute;
+            bottom: 1cm;
+            right: 2cm;
+            text-align: right;
+            font-size: 0.4cm;
+            color: #707070;
+        }
+        
+        .verification-text {
+            margin-top: 0.3cm;
+            font-size: 0.35cm;
+        }
+    </style>
+</head>
+<body>
+    <div class="certificate-container">
+        <div class="certificate-header">
+            <div class="certificate-title">CERTIFICADO</div>
+            <div class="certificate-subtitle">FaleComJesus - Jornada Espiritual</div>
+        </div>
+        
+        <div class="certificate-content">
+            <div class="completion-text">
+                Certificamos que
+            </div>
+            <div class="user-name">
+                {{ user_name }}
+            </div>
+            <div class="completion-text">
+                concluiu com êxito o plano de estudos
+            </div>
+            <div class="plan-title">
+                "{{ plan_title }}"
+            </div>
+            <div class="completion-text">
+                desenvolvendo seus conhecimentos bíblicos e fortalecendo sua fé.
+            </div>
+        </div>
+        
+        <div class="certificate-footer">
+            <div class="certificate-date">
+                <div>Data de conclusão</div>
+                <div>{{ completion_date }}</div>
+            </div>
+            
+            <div class="certificate-signature">
+                <div class="signature-line"></div>
+                <div>FaleComJesus Estudos Bíblicos</div>
+            </div>
+        </div>
+        
+        <div class="certificate-code-container">
+            <div>Código de verificação: {{ certificate_code }}</div>
+            <div class="verification-text">
+                Verifique a autenticidade deste certificado em: <br>
+                https://falecomjesus.com/verificar-certificado
+            </div>
+        </div>
+    </div>
+</body>
+</html> 

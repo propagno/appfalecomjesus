@@ -1,0 +1,17 @@
+# Node
+node_modules
+npm-debug.log
+# Build
+build
+dist
+# Misc
+.git
+.DS_Store
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+# Backend (reduzir contexto)
+backend
+# Infraestrutura (reduzir contexto)
+infra

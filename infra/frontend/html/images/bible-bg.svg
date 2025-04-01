@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="900" viewBox="0 0 1440 900" fill="none">
+  <rect width="1440" height="900" fill="#003366"/>
+  <path d="M720 450C720 450 580 320 400 320C220 320 100 450 100 450C100 450 220 580 400 580C580 580 720 450 720 450Z" fill="#DAA520" fill-opacity="0.1"/>
+  <path d="M720 450C720 450 860 320 1040 320C1220 320 1340 450 1340 450C1340 450 1220 580 1040 580C860 580 720 450 720 450Z" fill="#DAA520" fill-opacity="0.1"/>
+  <path d="M720 240C720 240 660 190 580 190C500 190 440 240 440 240C440 240 500 290 580 290C660 290 720 240 720 240Z" fill="#DAA520" fill-opacity="0.1"/>
+  <path d="M720 240C720 240 780 190 860 190C940 190 1000 240 1000 240C1000 240 940 290 860 290C780 290 720 240 720 240Z" fill="#DAA520" fill-opacity="0.1"/>
+  <path d="M720 660C720 660 660 610 580 610C500 610 440 660 440 660C440 660 500 710 580 710C660 710 720 660 720 660Z" fill="#DAA520" fill-opacity="0.1"/>
+  <path d="M720 660C720 660 780 610 860 610C940 610 1000 660 1000 660C1000 660 940 710 860 710C780 710 720 660 720 660Z" fill="#DAA520" fill-opacity="0.1"/>
+  <path d="M670 400H770V500H670V400Z" fill="#DAA520" fill-opacity="0.1"/>
+  <path d="M700 150V750" stroke="#DAA520" stroke-opacity="0.2" stroke-width="2"/>
+  <path d="M400 450H1040" stroke="#DAA520" stroke-opacity="0.2" stroke-width="2"/>
+  <circle cx="720" cy="450" r="200" stroke="#DAA520" stroke-opacity="0.1" stroke-width="2"/>
+  <circle cx="720" cy="450" r="300" stroke="#DAA520" stroke-opacity="0.05" stroke-width="2"/>
+  <circle cx="720" cy="450" r="400" stroke="#DAA520" stroke-opacity="0.025" stroke-width="2"/>
+  <g opacity="0.1">
+    <path d="M200 200L300 300" stroke="#DAA520"/>
+    <path d="M1140 200L1240 300" stroke="#DAA520"/>
+    <path d="M200 700L300 600" stroke="#DAA520"/>
+    <path d="M1140 700L1240 600" stroke="#DAA520"/>
+  </g>
+  <path d="M700 100C700 100 600 150 600 200C600 250 700 300 700 300C700 300 800 250 800 200C800 150 700 100 700 100Z" fill="#DAA520" fill-opacity="0.08"/>
+  <path d="M700 600C700 600 600 650 600 700C600 750 700 800 700 800C700 800 800 750 800 700C800 650 700 600 700 600Z" fill="#DAA520" fill-opacity="0.08"/>
+</svg> 

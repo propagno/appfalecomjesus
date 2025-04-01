@@ -1,0 +1,25 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Importação de fontes */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Lora:wght@400;500;600&display=swap');
+
+/* Customizações adicionais */
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+/* Estilos de acessibilidade */
+a:focus, button:focus, input:focus, textarea:focus {
+  outline: 2px solid rgba(62, 146, 204, 0.5);
+  outline-offset: 2px;
+}
+
+/* Aumentando visibilidade do foco para acessibilidade */
+:focus-visible {
+  outline: 3px solid #3E92CC !important;
+  outline-offset: 3px;
+} 

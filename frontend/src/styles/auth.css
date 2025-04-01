@@ -1,0 +1,623 @@
+/* Estilos globais para o fluxo de autenticação */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Lora&display=swap');
+
+.auth-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background: linear-gradient(to bottom, #CCE4F6, #FFFFFF);
+  padding: 2rem;
+  font-family: 'Lora', serif;
+}
+
+.auth-card {
+  background-color: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  width: 100%;
+  max-width: 420px;
+  padding: 2.5rem;
+  text-align: center;
+}
+
+.auth-logo {
+  margin-bottom: 1rem;
+  height: 64px;
+}
+
+.auth-title {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 700;
+  color: #333;
+  margin-bottom: 2rem;
+  font-size: 1.5rem;
+}
+
+.input-group {
+  position: relative;
+  margin-bottom: 1.5rem;
+  width: 100%;
+}
+
+.input-icon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #888;
+}
+
+.input-field {
+  width: 100%;
+  padding: 12px 12px 12px 40px;
+  border: 1px solid #E5E5E5;
+  border-radius: 8px;
+  font-family: 'Lora', serif;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+}
+
+.input-field:focus {
+  border-color: #CCE4F6;
+  box-shadow: 0 0 0 2px rgba(204, 228, 246, 0.3);
+  outline: none;
+}
+
+.password-toggle {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: #888;
+  cursor: pointer;
+}
+
+.auth-button {
+  background-color: #F4D58D;
+  color: #333;
+  border: none;
+  border-radius: 8px;
+  padding: 12px;
+  width: 100%;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 700;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.auth-button:hover {
+  background-color: #E4C57D;
+  transform: translateY(-2px);
+}
+
+.auth-button:active {
+  transform: translateY(0);
+}
+
+.auth-links {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  margin-bottom: 1.5rem;
+  font-size: 0.9rem;
+}
+
+.auth-link {
+  color: #007BFF;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.auth-link:hover {
+  color: #0056b3;
+  text-decoration: underline;
+}
+
+.social-login {
+  margin-top: 1.5rem;
+  width: 100%;
+}
+
+.social-divider {
+  display: flex;
+  align-items: center;
+  margin: 1rem 0;
+  color: #777;
+  font-size: 0.9rem;
+}
+
+.social-divider::before,
+.social-divider::after {
+  content: "";
+  flex: 1;
+  border-bottom: 1px solid #E5E5E5;
+}
+
+.social-divider::before {
+  margin-right: 10px;
+}
+
+.social-divider::after {
+  margin-left: 10px;
+}
+
+.social-buttons {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.social-button {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+  border: 1px solid #E5E5E5;
+  border-radius: 8px;
+  background: white;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.social-button:hover {
+  background-color: #FAF3E0;
+}
+
+.error-message {
+  color: #e74c3c;
+  font-size: 0.85rem;
+  margin-top: 0.25rem;
+  text-align: left;
+  margin-left: 40px;
+}
+
+.success-message {
+  background-color: #d4edda;
+  color: #155724;
+  padding: 1rem;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* Animações */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.auth-card {
+  animation: fadeIn 0.5s ease;
+}
+
+/* Responsividade */
+@media (max-width: 480px) {
+  .auth-card {
+    padding: 1.5rem;
+  }
+  
+  .auth-links {
+    flex-direction: column;
+    gap: 1rem;
+    align-items: center;
+  }
+}
+
+/* Estilos para autenticação */
+
+.auth-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: linear-gradient(to bottom, #CCE4F6, #FFFFFF);
+  padding: 20px;
+}
+
+.auth-card {
+  background: white;
+  border-radius: 15px;
+  padding: 30px;
+  width: 100%;
+  max-width: 450px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.auth-logo {
+  width: 80px;
+  height: 80px;
+  margin: 0 auto 20px;
+}
+
+.auth-title {
+  color: #333;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 700;
+  font-size: 1.8rem;
+  margin-bottom: 30px;
+}
+
+.auth-description {
+  color: #666;
+  font-family: 'Lora', serif;
+  font-size: 1rem;
+  margin-bottom: 20px;
+}
+
+.input-group {
+  position: relative;
+  margin-bottom: 20px;
+}
+
+.input-icon {
+  position: absolute;
+  left: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #888;
+  width: 20px;
+  height: 20px;
+}
+
+.input-field {
+  width: 100%;
+  padding: 15px 15px 15px 45px;
+  border: 1px solid #E5E5E5;
+  border-radius: 8px;
+  font-family: 'Lora', serif;
+  font-size: 1rem;
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.input-field:focus {
+  outline: none;
+  border-color: #CCE4F6;
+  box-shadow: 0 0 0 3px rgba(204, 228, 246, 0.3);
+}
+
+.password-toggle {
+  position: absolute;
+  right: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: #888;
+  cursor: pointer;
+  padding: 0;
+}
+
+.auth-button {
+  width: 100%;
+  padding: 15px;
+  background-color: #F4D58D;
+  border: none;
+  border-radius: 8px;
+  color: #333;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 700;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.2s;
+  margin-top: 10px;
+}
+
+.auth-button:hover {
+  background-color: #f1cb78;
+}
+
+.auth-button:active {
+  transform: scale(0.98);
+}
+
+.auth-button:disabled {
+  background-color: #e6e6e6;
+  color: #888;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.auth-links {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.auth-link {
+  color: #555;
+  text-decoration: none;
+  font-family: 'Lora', serif;
+  font-size: 0.9rem;
+  transition: color 0.3s;
+}
+
+.auth-link:hover {
+  color: #CCE4F6;
+}
+
+.error-message {
+  color: #e74c3c;
+  font-size: 0.85rem;
+  margin-top: 5px;
+  text-align: left;
+  padding-left: 45px;
+}
+
+.error-box {
+  background-color: #fff8f8;
+  border: 1px solid #ffcdd2;
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.error-box p {
+  color: #e74c3c;
+  font-family: 'Lora', serif;
+  margin-bottom: 15px;
+}
+
+.social-login {
+  margin-top: 30px;
+}
+
+.social-divider {
+  position: relative;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.social-divider::before,
+.social-divider::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  width: 40%;
+  height: 1px;
+  background-color: #E5E5E5;
+}
+
+.social-divider::before {
+  left: 0;
+}
+
+.social-divider::after {
+  right: 0;
+}
+
+.social-divider span {
+  display: inline-block;
+  padding: 0 10px;
+  background-color: white;
+  position: relative;
+  color: #777;
+  font-size: 0.9rem;
+}
+
+.social-buttons {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+}
+
+.social-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 20px;
+  border: 1px solid #E5E5E5;
+  border-radius: 8px;
+  background-color: white;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.2s;
+  flex: 1;
+  max-width: 160px;
+}
+
+.social-button:hover {
+  background-color: #f8f8f8;
+}
+
+.social-button:active {
+  transform: scale(0.98);
+}
+
+.social-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Estilo para o botão de teste de conexão */
+.connection-test-button {
+  margin-top: 1rem;
+  padding: 0.7rem;
+  width: 100%;
+  font-size: 0.85rem;
+  color: #555;
+  background-color: #f8f8f8;
+  border: 1px solid #E5E5E5;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.2s;
+  font-family: 'Montserrat', sans-serif;
+}
+
+.connection-test-button:hover {
+  background-color: #f0f0f0;
+}
+
+.connection-test-button:active {
+  transform: scale(0.98);
+}
+
+.connection-test-button:disabled {
+  background-color: #e6e6e6;
+  color: #888;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Estilos para a mensagem de sucesso */
+.success-message {
+  text-align: center;
+  padding: 20px 0;
+}
+
+.success-icon {
+  color: #4CAF50;
+  margin-bottom: 20px;
+}
+
+.success-message p {
+  color: #555;
+  font-family: 'Lora', serif;
+  line-height: 1.6;
+  margin-bottom: 15px;
+}
+
+.success-message strong {
+  color: #333;
+  font-weight: 700;
+}
+
+/* Responsividade */
+@media (max-width: 480px) {
+  .auth-card {
+    padding: 20px;
+  }
+  
+  .auth-title {
+    font-size: 1.5rem;
+  }
+  
+  .input-field {
+    padding: 12px 12px 12px 40px;
+  }
+  
+  .auth-button {
+    padding: 12px;
+  }
+  
+  .social-buttons {
+    flex-direction: column;
+  }
+  
+  .social-button {
+    max-width: 100%;
+  }
+}
+
+/* Indicador de status do servidor */
+.server-status-warning {
+  background-color: #fff3e0;
+  border-left: 4px solid #ff9800;
+  padding: 12px;
+  margin-bottom: 24px;
+  border-radius: 4px;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.status-indicator {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  display: inline-block;
+  margin-right: 8px;
+}
+
+.status-indicator.online {
+  background-color: #4caf50;
+}
+
+.status-indicator.offline {
+  background-color: #f44336;
+}
+
+.status-indicator.checking {
+  background-color: #ffc107;
+  animation: blink 1s infinite;
+}
+
+.connection-details {
+  margin-top: 8px;
+  font-size: 13px;
+  color: #666;
+  white-space: pre-line;
+}
+
+.diagnostic-results {
+  margin-top: 12px;
+  background-color: #f5f5f5;
+  padding: 10px;
+  border-radius: 4px;
+  font-size: 13px;
+}
+
+.diagnostic-results pre {
+  white-space: pre-wrap;
+  margin: 0;
+  padding: 8px;
+  font-family: monospace;
+  color: #333;
+  background-color: #f9f9f9;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  overflow-x: auto;
+}
+
+.connection-test-button {
+  background-color: transparent;
+  color: #3f51b5;
+  border: 1px solid #3f51b5;
+  padding: 8px 16px;
+  font-size: 14px;
+  border-radius: 4px;
+  margin-top: 16px;
+  cursor: pointer;
+  transition: all 0.3s;
+  width: 100%;
+}
+
+.connection-test-button:hover {
+  background-color: rgba(63, 81, 181, 0.08);
+}
+
+.connection-test-button:disabled {
+  border-color: #bdbdbd;
+  color: #bdbdbd;
+  cursor: not-allowed;
+}
+
+/* Botão de login persistente */
+.auth-button.persistent-login {
+  margin-top: 8px;
+  background-color: #f3e5f5;
+  color: #673ab7;
+  font-size: 14px;
+  font-weight: normal;
+  border: 1px solid #d1c4e9;
+}
+
+.auth-button.persistent-login:hover {
+  background-color: #e1bee7;
+}
+
+@keyframes blink {
+  0% { opacity: 0.4; }
+  50% { opacity: 1; }
+  100% { opacity: 0.4; }
+} 

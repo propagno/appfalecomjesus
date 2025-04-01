@@ -1,0 +1,5 @@
+{
+  "status": "healthy",
+  "service": "nginx",
+  "version": "1.27.4"
+} 
