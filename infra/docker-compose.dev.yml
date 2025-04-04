@@ -132,7 +132,7 @@ services:
       - DATABASE_URL=postgresql://postgres:postgres@study-db:5432/study_db
       - REDIS_URL=redis://redis:6379/1
       - JWT_SECRET=falecomjesussecretkey2024
-      - CHATIA_URL=http://ms-chatia:5000/api/chat
+      - CHATIA_URL=http://ms-chatia:8003/api/v1/chat
     networks:
       - app-network
     mem_limit: 256m
@@ -160,7 +160,9 @@ services:
       dockerfile: Dockerfile
     container_name: infra-ms-chatia
     ports:
-      - "8003:5000"
+      - "8003:8003"
+    volumes:
+      - ../backend/ms-chatia:/app
     depends_on:
       - chatia-db
       - redis
@@ -169,7 +171,7 @@ services:
       - REDIS_URL=redis://redis:6379/2
       - JWT_SECRET=falecomjesussecretkey2024
       - OPENAI_API_KEY=${OPENAI_API_KEY}
-      - PORT=5000
+      - PORT=8003
       - HOST=0.0.0.0
     networks:
       - app-network
